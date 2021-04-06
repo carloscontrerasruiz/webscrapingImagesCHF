@@ -36,19 +36,25 @@ def getImagesPageUrl(n_categorias = 5,n_imagenes=5):
             categoryName = createBinder(tag.span.text)
             while True:
                 tag = tag.nextSibling
-                if(tag['class'][0] != 'resultSpacer' and contadorImagenes < n_imagenes):
-                    img_url_list.append({
-                        "imagePageUrl":tag.a['href'],
-                        "category":categoryName
-                    })
-                    contadorImagenes += 1
+                #Al momento de darle formato al html se tuvo que agregar repetida
+                #el nextSibiling
+                tag = tag.nextSibling
+                if tag != None:
+                    if(tag['class'][0] != 'resultSpacer' and contadorImagenes < n_imagenes):
+                        img_url_list.append({
+                            "imagePageUrl":tag.a['href'],
+                            "category":categoryName
+                        })
+                        contadorImagenes += 1
+                    else:
+                        break
                 else:
                     break
     logging.info('Se obtienen %s paginas del detalle de la imagen',len(img_url_list))
     return img_url_list
 
 def cleanRoute(imageName):
-    return imageName.strip().replace(" ", "").replace("'", "")
+    return imageName.strip().replace(" ", "").replace("'", "").replace("\"", "")
 
 def getImagesUrl(imgpage_url_list):
     logging.info('Se ingresa a la pagina del detalle de cada imagen para obtener su url')
